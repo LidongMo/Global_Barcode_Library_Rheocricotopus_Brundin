@@ -1,29 +1,4 @@
 # Rheocricotopus
-# this is the code to prepare shapefile for the distribution of Rheocricotopus 
-
-# load the library
-library(raster)
-library(rgdal)
-library(factoextra)
-library(ggpubr)
-library(data.table)
-# set the working directory
-setwd("~/Desktop/Xiaolong_LIN/Rheocricotopus/")
-
-# read the distribution points from csv
-distributionTable = read.csv("Data/DistributionPointsData/distribution_new.csv")
-# make a copy of the table to store the data, and remove the points with out coordinates infromation
-dupilcateTable = na.omit(distributionTable[,c("Lat","Lon","Sample.ID")])
-# allote the coordinates
-coordinates(dupilcateTable) = ~Lon+Lat
-# allocate projection system
-proj4string(dupilcateTable) = CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
-dupilcateTable@data =  na.omit(distributionTable[,c("Lat","Lon","Sample.ID","Continent","Country.Ocean")])
-# write the shapefile into local folder
-writeOGR(dupilcateTable,dsn="Data",layer="Rheocricotopus_Distribution", driver = "ESRI Shapefile",overwrite=T)
-
-
-
 
 # STEP 2 read the covraites table
 library(raster)
@@ -33,7 +8,6 @@ library(ggpubr)
 library(data.table)
 library(corrplot)
 # set the working directory
-setwd("~/Desktop/Xiaolong_LIN/Rheocricotopus/")
 
 trainTable = fread("Data/DataWithCovariates/20210319_Rheocricotopus_Covariates_samppling_to_drive.csv")
 # define the covariates vector
@@ -61,9 +35,7 @@ pdf("Plots/Figure_X_Hclust_for_Covariates.pdf",height=8,width=14)
 plot(cor.cluster)
 dev.off()
 
-
 # selected variables
-
 
 # top 10 contribution vars 
 topVars = c("CHELSA_BIO_Mean_Temperature_of_Warmest_Quarter","CHELSA_BIO_Annual_Precipitation","EsaCci_SnowProbability","CHELSA_BIO_Precipitation_of_Wettest_Quarter","CHELSA_BIO_Precipitation_of_Wettest_Month","MODIS_GPP","CHELSA_exBIO_FrostDays","CHELSA_BIO_Min_Temperature_of_Coldest_Month","CHELSA_BIO_Annual_Mean_Temperature","CHELSA_BIO_Mean_Temperature_of_Coldest_Quarter")
